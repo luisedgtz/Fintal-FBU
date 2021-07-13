@@ -34,6 +34,10 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
+        if (ParseUser.getCurrentUser() != null) {
+            goMainActivity();
+        }
+
         etName = (TextInputEditText) findViewById(R.id.etName);
         etLastName = (TextInputEditText) findViewById(R.id.etLastName);
         etUsername = (TextInputEditText) findViewById(R.id.etUsernameSignup);
