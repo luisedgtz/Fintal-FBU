@@ -9,6 +9,7 @@ public class Category extends ParseObject {
     public static final String KEY_NAME = "name";
     public static final String KEY_ICON = "iconFile";
 
+    //Empty constructor
     public Category() {}
 
     //GET METHODS
