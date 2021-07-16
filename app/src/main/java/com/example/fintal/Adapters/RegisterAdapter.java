@@ -21,6 +21,9 @@ public class RegisterAdapter extends RecyclerView.Adapter<RegisterAdapter.ViewHo
     private Context context;
     private List<Register> registers;
 
+    private static final int EXPENSE_REGISTER = 123;
+    private static final int INCOME_REGISTER = 321;
+
     public RegisterAdapter(Context context, List<Register> registers) {
         this.context = context;
         this.registers = registers;
@@ -41,8 +44,16 @@ public class RegisterAdapter extends RecyclerView.Adapter<RegisterAdapter.ViewHo
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_income, parent, false);
-        return new ViewHolder(view);
+        LayoutInflater inflater = LayoutInflater.from(context);
+        if (viewType == EXPENSE_REGISTER) {
+            View view = inflater.inflate(R.layout.item_expense, parent, false);
+            return new ExpenseViewHolder(view);
+        } else if (viewType == INCOME_REGISTER) {
+            View view = inflater.inflate(R.layout.item_income, parent, false);
+            return new IncomeViewHolder(view);
+        } else {
+            throw new IllegalArgumentException("Unknown view type");
+        }
     }
 
     @Override
@@ -52,17 +63,38 @@ public class RegisterAdapter extends RecyclerView.Adapter<RegisterAdapter.ViewHo
     }
 
     @Override
+    public int getItemViewType(int position) {
+        if (registerType(position)) {
+            return INCOME_REGISTER;
+        } else {
+            return EXPENSE_REGISTER;
+        }
+    }
+
+    @Override
     public int getItemCount() {
         return registers.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    private boolean registerType(int position) {
+        Register register = registers.get(position);
+        return register.getType();
+    }
+
+    public abstract class ViewHolder extends RecyclerView.ViewHolder {
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+        }
+        abstract void bind(Register register);
+    }
+
+    public class ExpenseViewHolder extends ViewHolder {
         private ImageView ivIcon;
         private TextView tvDescription;
         private TextView tvCategory;
         private TextView tvAmount;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ExpenseViewHolder(View itemView) {
             super(itemView);
             ivIcon = itemView.findViewById(R.id.ivIcon);
             tvDescription = itemView.findViewById(R.id.tvDescription);
@@ -70,7 +102,31 @@ public class RegisterAdapter extends RecyclerView.Adapter<RegisterAdapter.ViewHo
             tvAmount = itemView.findViewById(R.id.tvAmount);
         }
 
-        public void bind(Register register) {
+        @Override
+        void bind(Register register) {
+            //Bind register data to the view elements
+            tvDescription.setText(register.getDescription());
+            tvAmount.setText("$" + register.getAmount().toString());
+            tvCategory.setText((String) register.getCategory().get("name"));
+        }
+    }
+
+    public class IncomeViewHolder extends ViewHolder {
+        private ImageView ivIcon;
+        private TextView tvDescription;
+        private TextView tvCategory;
+        private TextView tvAmount;
+
+        public IncomeViewHolder(View itemView) {
+            super(itemView);
+            ivIcon = itemView.findViewById(R.id.ivIcon);
+            tvDescription = itemView.findViewById(R.id.tvDescription);
+            tvCategory = itemView.findViewById(R.id.tvCategory);
+            tvAmount = itemView.findViewById(R.id.tvAmount);
+        }
+
+        @Override
+        void bind(Register register) {
             //Bind register data to the view elements
             tvDescription.setText(register.getDescription());
             tvAmount.setText("$" + register.getAmount().toString());
