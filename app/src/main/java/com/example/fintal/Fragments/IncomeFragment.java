@@ -1,5 +1,6 @@
 package com.example.fintal.Fragments;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -14,6 +15,8 @@ import android.view.ViewGroup;
 import com.example.fintal.Adapters.RegisterAdapter;
 import com.example.fintal.Models.Register;
 import com.example.fintal.R;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -28,6 +31,7 @@ public class IncomeFragment extends Fragment {
     private RecyclerView rvIncomes;
     protected RegisterAdapter adapter;
     protected List<Register> incomesList;
+    protected FloatingActionButton btnAddIncome;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,7 +50,22 @@ public class IncomeFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         rvIncomes.setLayoutManager(linearLayoutManager);
 
+        //Add click listener to floating action button
+        btnAddIncome = getView().findViewById(R.id.btnAddIncome);
+        btnAddIncome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showNewDialog();
+            }
+        });
+
         getIncomes();
+    }
+
+    //Triggered when floating action button is clicked
+    //displays a dialog for user to fill information about new task
+    private void showNewDialog() {
+        new NewIncomeFragment().show(getChildFragmentManager(), NewIncomeFragment.TAG);
     }
 
     private void getIncomes() {

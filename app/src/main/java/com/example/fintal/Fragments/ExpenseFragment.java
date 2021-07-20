@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.example.fintal.Adapters.RegisterAdapter;
 import com.example.fintal.Models.Register;
 import com.example.fintal.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -28,6 +29,7 @@ public class ExpenseFragment extends Fragment {
     private RecyclerView rvExpenses;
     protected RegisterAdapter adapter;
     protected List<Register> expensesList;
+    protected FloatingActionButton btnAddExpense;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,7 +48,22 @@ public class ExpenseFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         rvExpenses.setLayoutManager(linearLayoutManager);
 
+        //Add click listener to floating action button
+        btnAddExpense = getView().findViewById(R.id.btnAddExpense);
+        btnAddExpense.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showNewDialog();
+            }
+        });
+
         getExpenses();
+    }
+
+    //Triggered when floating action button is clicked
+    //displays a dialog for user to fill information about new task
+    private void showNewDialog() {
+        new NewExpenseFragment().show(getChildFragmentManager(), NewIncomeFragment.TAG);
     }
 
     private void getExpenses() {
