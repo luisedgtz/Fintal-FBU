@@ -2,6 +2,7 @@ package com.example.fintal;
 
 import android.app.Application;
 
+import com.example.fintal.Models.Category;
 import com.example.fintal.Models.Register;
 import com.example.fintal.Models.User;
 import com.parse.Parse;
@@ -15,6 +16,7 @@ public class ParseApplication extends Application {
         //Register parse models
         ParseObject.registerSubclass(Register.class);
         ParseObject.registerSubclass(User.class);
+        ParseObject.registerSubclass(Category.class);
 
         //Initialize parse application
         Parse.initialize(new Parse.Configuration.Builder(this)

@@ -33,5 +33,4 @@
 
         <activity android:name=".MainActivity" />
     </application>
-
 </manifest>
