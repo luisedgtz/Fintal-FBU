@@ -33,11 +33,18 @@ import android.widget.Toast;
 import com.example.fintal.Helpers.BitmapScaler;
 import com.example.fintal.Helpers.DeviceDimensionsHelper;
 import com.example.fintal.Models.Category;
+import com.example.fintal.Models.Register;
+import com.example.fintal.Models.User;
 import com.example.fintal.R;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.textfield.TextInputEditText;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -47,8 +54,10 @@ import java.util.List;
 
 public class NewIncomeFragment extends DialogFragment {
     public static final String TAG = "NewIncomeFragment";
-    public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 150;
+    public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 250;
 
+    TextInputEditText etDescription;
+    TextInputEditText etAmount;
     List<Category> categories;
     ArrayList<String> categoriesString;
     AutoCompleteTextView categoryPicker;
@@ -76,6 +85,9 @@ public class NewIncomeFragment extends DialogFragment {
             dialog.getWindow().setLayout(width, height);
         }
 
+        etDescription = getView().findViewById(R.id.etDescriptionIncome);
+        etAmount = getView().findViewById(R.id.etAmountIncome);
+
         //Initialize arrays for categories
         categories = new ArrayList<>();
         categoriesString = new ArrayList<>();
@@ -102,7 +114,14 @@ public class NewIncomeFragment extends DialogFragment {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveIncome();
+                String description = etDescription.getEditableText().toString();
+                if (description.isEmpty() || etAmount.getEditableText().toString().isEmpty()) {
+                    Toast.makeText(getContext(), "Description and amount cannot be empty", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Number amount =  Double.parseDouble(etAmount.getEditableText().toString());
+                ParseUser currentUser = ParseUser.getCurrentUser();
+                saveIncome(description, amount, currentUser, photoFile);
             }
         });
 
@@ -116,12 +135,50 @@ public class NewIncomeFragment extends DialogFragment {
         });
     }
 
-    private void saveIncome() {
+    private void saveIncome(String description, Number amount, ParseUser currentUser, File photoFile) {
         String textCategory = categoryPicker.getEditableText().toString();
         int index = 0;
         if (categoriesString.contains(textCategory)) {
             index = categoriesString.indexOf(textCategory);
         }
+        Register register = new Register();
+        register.setType(true);
+        register.setUser(currentUser);
+        if (photoFile != null) {
+            register.setPhoto(new ParseFile(photoFile));
+        }
+        register.setAmount(amount);
+        register.setCategory(categories.get(index));
+        register.setDescription(description);
+        register.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    Toast.makeText(getContext(), "Error while saving", Toast.LENGTH_SHORT).show();
+                    dismiss();
+                    Log.e(TAG, "error", e);
+                    return;
+                }
+                changeBalance(amount);
+                Toast.makeText(getContext(), "Saved successfully", Toast.LENGTH_SHORT).show();
+                dismiss();
+            }
+        });
+    }
+
+    private void changeBalance(Number amount) {
+        ParseQuery<ParseUser> query = ParseUser.getQuery();
+        query.getInBackground(ParseUser.getCurrentUser().getObjectId(), new GetCallback<ParseUser>() {
+            @Override
+            public void done(ParseUser object, ParseException e) {
+                if (e == null) {
+                    Number income = object.getNumber("totalIncome");
+                    income = income.floatValue() + amount.floatValue();
+                    object.put("totalIncome", income);
+                    object.saveInBackground();
+                }
+            }
+        });
     }
 
     //Function to get categories

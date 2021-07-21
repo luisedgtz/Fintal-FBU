@@ -48,7 +48,7 @@ public class Register extends ParseObject {
         put(KEY_DESCRIPTION, description);
     }
     public void setPhoto(ParseFile filePhoto) {
-        put(KEY_AMOUNT, filePhoto);
+        put(KEY_PHOTO, filePhoto);
     }
     public void setCategory(ParseObject category) {
         put(KEY_CATEGORY, category);

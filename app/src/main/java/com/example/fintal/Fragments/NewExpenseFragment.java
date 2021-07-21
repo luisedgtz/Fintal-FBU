@@ -30,11 +30,18 @@ import android.widget.Toast;
 import com.example.fintal.Helpers.BitmapScaler;
 import com.example.fintal.Helpers.DeviceDimensionsHelper;
 import com.example.fintal.Models.Category;
+import com.example.fintal.Models.Register;
 import com.example.fintal.R;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.textfield.TextInputEditText;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -46,6 +53,8 @@ public class NewExpenseFragment extends DialogFragment {
     public static final String TAG = "NewExpenseFragment";
     public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 150;
 
+    TextInputEditText etDescription;
+    TextInputEditText etAmount;
     List<Category> categories;
     ArrayList<String> categoriesString;
     AutoCompleteTextView categoryPicker;
@@ -54,7 +63,7 @@ public class NewExpenseFragment extends DialogFragment {
     Button btnSave;
     Button btnCancel;
 
-    public File photoFile;
+    private File photoFile;
     public String photoFileName = "photo.jpg";
 
     @Override
@@ -72,6 +81,9 @@ public class NewExpenseFragment extends DialogFragment {
             int height = ViewGroup.LayoutParams.MATCH_PARENT;
             dialog.getWindow().setLayout(width, height);
         }
+
+        etDescription = getView().findViewById(R.id.etDescriptionExpense);
+        etAmount = getView().findViewById(R.id.etAmountExpense);
 
         //Initialize arrays for categories
         categories = new ArrayList<>();
@@ -99,7 +111,14 @@ public class NewExpenseFragment extends DialogFragment {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveExpense();
+                String description = etDescription.getEditableText().toString();
+                if (description.isEmpty() || etAmount.getEditableText().toString().isEmpty()) {
+                    Toast.makeText(getContext(), "Description and amount cannot be empty", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Number amount =  Double.parseDouble(etAmount.getEditableText().toString());
+                ParseUser currentUser = ParseUser.getCurrentUser();
+                saveExpense(description, amount, currentUser, photoFile);
             }
         });
 
@@ -113,17 +132,55 @@ public class NewExpenseFragment extends DialogFragment {
         });
     }
 
-    private void saveExpense() {
+    private void saveExpense(String description, Number amount, ParseUser currentUser, File photoFile) {
         String textCategory = categoryPicker.getEditableText().toString();
         int index = 0;
         if (categoriesString.contains(textCategory)) {
             index = categoriesString.indexOf(textCategory);
         }
+        Register register = new Register();
+        register.setType(false);
+        register.setUser(currentUser);
+        if (photoFile != null) {
+            register.setPhoto(new ParseFile(photoFile));
+        }
+        register.setAmount(amount);
+        register.setCategory(categories.get(index));
+        register.setDescription(description);
+        register.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    Toast.makeText(getContext(), "Error while saving", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "error", e);
+                    return;
+                }
+                changeBalance(amount);
+                Toast.makeText(getContext(), "Saved successfully", Toast.LENGTH_SHORT).show();
+                dismiss();
+            }
+        });
+    }
+
+    private void changeBalance(Number amount) {
+        ParseQuery<ParseUser> query = ParseUser.getQuery();
+        query.getInBackground(ParseUser.getCurrentUser().getObjectId(), new GetCallback<ParseUser>() {
+            @Override
+            public void done(ParseUser object, ParseException e) {
+                if (e == null) {
+                    Number expenses = object.getNumber("totalExpenses");
+                    expenses = expenses.floatValue() + amount.floatValue();
+                    object.put("totalExpenses", expenses);
+                    object.saveInBackground();
+                }
+            }
+        });
     }
 
     //Function to get categories
     private void getCategories() {
         ParseQuery<Category> query = ParseQuery.getQuery(Category.class);
+        query.addAscendingOrder("createdAt");
         query.findInBackground(new FindCallback<Category>() {
             @Override
             public void done(List<Category> objects, ParseException e) {
