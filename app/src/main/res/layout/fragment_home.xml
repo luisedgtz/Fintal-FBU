@@ -189,8 +189,6 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="0dp"
-        android:background="@drawable/layout_borders_top"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp" />
+        android:background="@drawable/layout_borders_top" />
 
 </RelativeLayout>

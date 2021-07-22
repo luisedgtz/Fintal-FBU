@@ -12,8 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.fintal.Adapters.RegisterAdapter;
+import com.example.fintal.Models.Category;
 import com.example.fintal.Models.Register;
 import com.example.fintal.R;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipDrawable;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -30,6 +34,9 @@ public class ExpenseFragment extends Fragment {
     protected RegisterAdapter adapter;
     protected List<Register> expensesList;
     protected FloatingActionButton btnAddExpense;
+
+    List<Category> categories;
+    ArrayList<String> categoriesString;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,6 +64,11 @@ public class ExpenseFragment extends Fragment {
             }
         });
 
+        //Initialize arrays for categories
+        categories = new ArrayList<>();
+        categoriesString = new ArrayList<>();
+        getCategories();
+
         getExpenses();
     }
 
@@ -64,6 +76,44 @@ public class ExpenseFragment extends Fragment {
     //displays a dialog for user to fill information about new task
     private void showNewDialog() {
         new NewExpenseFragment().show(getChildFragmentManager(), NewIncomeFragment.TAG);
+    }
+
+    //Function to get categories
+    private void getCategories() {
+        ParseQuery<Category> query = ParseQuery.getQuery(Category.class);
+        query.addAscendingOrder("createdAt");
+        query.findInBackground(new FindCallback<Category>() {
+            @Override
+            public void done(List<Category> objects, ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Issue getting categories", e);
+                    return;
+                }
+                categories.addAll(objects);
+                for (int i = 0; i < categories.size(); i++) {
+                    //Add only Name string of each Category object
+                    categoriesString.add(categories.get(i).getName());
+                }
+                setupChipGroup();
+            }
+        });
+    }
+
+    private void setupChipGroup() {
+        ChipGroup chipGroup = getView().findViewById(R.id.chipGroupExpense);
+        for (String i : categoriesString) {
+            ChipDrawable chipDrawable = ChipDrawable.createFromAttributes(getContext(), null, 0, R.style.Widget_MaterialComponents_Chip_Choice);
+            Chip chip = new Chip(getContext());
+            chip.setChipDrawable(chipDrawable);
+            chip.setText(i);
+            chip.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    chip.setChecked(true);
+                }
+            });
+            chipGroup.addView(chip);
+        }
     }
 
     private void getExpenses() {

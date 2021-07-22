@@ -18,9 +18,7 @@
         android:layout_marginStart="0dp"
         android:layout_marginTop="0dp"
         android:layout_marginEnd="0dp"
-        android:layout_marginBottom="0dp"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp" />
+        android:layout_marginBottom="0dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnAddIncome"
