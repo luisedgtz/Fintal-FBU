@@ -33,7 +33,7 @@ Fintal is a mobile app to manage personal finances. With Fintal you can register
 * Users can see a global balance of their money, including total expenses and total income
 * Users can categorize any register by some default categories (food, entertainment, home, transport, education, clothing, payments, others)
 * Users can see a graph of their expenses by category
-* Users can search for an specific register by name or filter categories
+* Users can filter expenses by categories
 * Users can add a photo of a ticket to a register
 
 **Optional Nice-to-have Stories**
