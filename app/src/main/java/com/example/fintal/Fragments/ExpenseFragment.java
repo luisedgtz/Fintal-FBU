@@ -2,6 +2,7 @@ package com.example.fintal.Fragments;
 
 import android.os.Bundle;
 
+import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,6 +38,8 @@ public class ExpenseFragment extends Fragment {
 
     List<Category> categories;
     ArrayList<String> categoriesString;
+    String selectedCategoryString;
+    Category selectedCategory;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -64,9 +67,10 @@ public class ExpenseFragment extends Fragment {
             }
         });
 
-        //Initialize arrays for categories
+        //Initialize variables for categories
         categories = new ArrayList<>();
         categoriesString = new ArrayList<>();
+        selectedCategoryString = "";
         getCategories();
 
         getExpenses();
@@ -100,16 +104,37 @@ public class ExpenseFragment extends Fragment {
     }
 
     private void setupChipGroup() {
+        //Get chipGroup
         ChipGroup chipGroup = getView().findViewById(R.id.chipGroupExpense);
+        //Set chips dynamically for all existing categories
         for (String i : categoriesString) {
+            //Set chip style to chip_choice
             ChipDrawable chipDrawable = ChipDrawable.createFromAttributes(getContext(), null, 0, R.style.Widget_MaterialComponents_Chip_Choice);
+            //create chip
             Chip chip = new Chip(getContext());
             chip.setChipDrawable(chipDrawable);
+            //Set id and text
+            chip.setId(ViewCompat.generateViewId());
             chip.setText(i);
+            //Set onClickListener
             chip.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    chip.setChecked(true);
+                    //Check if chip was already clicked
+                    if (!chip.isChecked()) {
+                        selectedCategoryString = "";
+                    } else {
+                        //Get index of category
+                        int index = 0;
+                        if (categoriesString.contains(i)) {
+                            index = categoriesString.indexOf(i);
+                            selectedCategoryString = i;
+                            //Set selected category
+                            selectedCategory = categories.get(index);
+                        }
+                    }
+                    //call get expenses to re-run query
+                    getExpenses();
                 }
             });
             chipGroup.addView(chip);
@@ -122,6 +147,10 @@ public class ExpenseFragment extends Fragment {
         //limit to 20 items
         query.setLimit(20);
         query.include(Register.KEY_CATEGORY);
+        //Check if there is a selected category to filter
+        if (selectedCategoryString != "") {
+            query.whereEqualTo(Register.KEY_CATEGORY,selectedCategory);
+        }
         query.whereEqualTo("user", ParseUser.getCurrentUser());
         query.whereEqualTo("type", false);
         //order items from newest to oldest
