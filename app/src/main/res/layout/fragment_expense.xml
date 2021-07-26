@@ -7,39 +7,53 @@
     android:layout_height="match_parent"
     tools:context=".Fragments.ExpenseFragment">
 
+    <SearchView
+        android:id="@+id/svExpenses"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"/>
+
     <HorizontalScrollView
         android:id="@+id/chipContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/svExpenses"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:scrollbars="none">
+
         <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chipGroupIncome"
+            android:id="@+id/chipGroupExpense"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="15dp"
             android:paddingEnd="20dp"
-            app:singleSelection="true"
-            app:singleLine="true">
+            app:singleLine="true"
+            app:singleSelection="true">
 
         </com.google.android.material.chip.ChipGroup>
     </HorizontalScrollView>
 
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvExpenses"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/chipContainer"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="0dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginBottom="0dp" />
+        android:id="@+id/swipeContainer">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvExpenses"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="0dp"
+            android:layout_marginBottom="0dp" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnAddExpense"

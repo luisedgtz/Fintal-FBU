@@ -1,17 +1,23 @@
 package com.example.fintal.Fragments;
 
 import android.content.DialogInterface;
+import android.graphics.Canvas;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
 import com.example.fintal.Adapters.RegisterAdapter;
 import com.example.fintal.Models.Category;
@@ -22,13 +28,17 @@ import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.parse.DeleteCallback;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 public class IncomeFragment extends Fragment {
     public static final String TAG = "IncomeFragment";
@@ -37,6 +47,8 @@ public class IncomeFragment extends Fragment {
     protected RegisterAdapter adapter;
     protected List<Register> incomesList;
     protected FloatingActionButton btnAddIncome;
+
+    private SwipeRefreshLayout swipeContainer;
 
     List<Category> categories;
     ArrayList<String> categoriesString;
@@ -59,6 +71,35 @@ public class IncomeFragment extends Fragment {
         rvIncomes.setAdapter(adapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         rvIncomes.setLayoutManager(linearLayoutManager);
+
+        //Define itemTouchHelper for swipe
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        //Attach it to the Recycler View
+        itemTouchHelper.attachToRecyclerView(rvIncomes);
+
+        //Get search view and set on query text listener
+        SearchView searchView = getView().findViewById(R.id.svIncomes);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+
+        //Set on refresh listener to recycler view
+        swipeContainer = getView().findViewById(R.id.swipeContainer);
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getIncomes();
+            }
+        });
 
         //Add click listener to floating action button
         btnAddIncome = getView().findViewById(R.id.btnAddIncome);
@@ -107,7 +148,7 @@ public class IncomeFragment extends Fragment {
 
     private void setupChipGroup() {
         //Get chipGroup
-        ChipGroup chipGroup = getView().findViewById(R.id.chipGroupExpense);
+        ChipGroup chipGroup = getView().findViewById(R.id.chipGroupIncome);
         //Set chips dynamically for all existing categories
         for (String i : categoriesString) {
             //Set chip style to chip_choice
@@ -135,7 +176,7 @@ public class IncomeFragment extends Fragment {
                             selectedCategory = categories.get(index);
                         }
                     }
-                    //call get expenses to re-run query
+                    //call get incomes to re-run query
                     getIncomes();
                 }
             });
@@ -167,7 +208,67 @@ public class IncomeFragment extends Fragment {
                 }
                 adapter.clear();
                 adapter.addAll(objects);
+                swipeContainer.setRefreshing(false);
             }
         });
     }
+
+    private void changeBalance(Number amount) {
+        ParseQuery<ParseUser> query = ParseUser.getQuery();
+        query.getInBackground(ParseUser.getCurrentUser().getObjectId(), new GetCallback<ParseUser>() {
+            @Override
+            public void done(ParseUser object, ParseException e) {
+                if (e == null) {
+                    Number income = object.getNumber("totalIncome");
+                    income = income.floatValue() + amount.floatValue();
+                    object.put("totalIncome", income);
+                    object.saveInBackground();
+                }
+            }
+        });
+    }
+
+    //Simple callback touch helper for swipe to delete on recycler view items
+    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        //Method for drag and drop, it will not be used for this app but it is necessary to define it
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+        //Method for swipe functionality
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            //Get position for swiped view holder
+            final int position = viewHolder.getAdapterPosition();
+            switch (direction) {
+                case ItemTouchHelper.LEFT:
+                    Log.d(TAG, "Swiped left");
+                    Register register = incomesList.get(position);
+                    register.deleteInBackground(new DeleteCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (e != null) {
+                                Log.d(TAG, "delete failed");
+                                return;
+                            }
+                            changeBalance(-register.getAmount().floatValue());
+                            incomesList.remove(position);
+                            adapter.notifyItemRemoved(position);
+                            getIncomes();
+                        }
+                    });
+                    break;
+            }
+        }
+
+        @Override
+        public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                    .addSwipeLeftBackgroundColor(ContextCompat.getColor(getContext(), R.color.red_expenses))
+                    .addSwipeLeftActionIcon(R.drawable.ic_round_delete_24)
+                    .create()
+                    .decorate();
+        }
+    };
 }

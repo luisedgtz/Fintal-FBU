@@ -57,5 +57,6 @@ dependencies {
     implementation "androidx.annotation:annotation:1.1.0"
     //Pie chart
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
-
+    //Swipe background decorator
+    implementation 'it.xabaras.android:recyclerview-swipedecorator:1.2.3'
 }
