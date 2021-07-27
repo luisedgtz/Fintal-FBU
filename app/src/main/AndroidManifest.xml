@@ -21,7 +21,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Fintal">
-        <activity android:name=".UserActivity"></activity>
+        <activity android:name=".RegisterDetailsActivity"></activity>
+        <activity android:name=".UserActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

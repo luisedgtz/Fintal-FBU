@@ -1,6 +1,8 @@
 package com.example.fintal.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,10 +17,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fintal.Models.Register;
 import com.example.fintal.R;
+import com.example.fintal.RegisterDetailsActivity;
+import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou;
+import com.parse.ParseFile;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+
+import org.parceler.Parcels;
 
 public class RegisterAdapter extends RecyclerView.Adapter<RegisterAdapter.ViewHolder> implements Filterable {
     //Tag for debugging
@@ -125,7 +131,7 @@ public class RegisterAdapter extends RecyclerView.Adapter<RegisterAdapter.ViewHo
         }
     };
 
-    public abstract class ViewHolder extends RecyclerView.ViewHolder {
+    public abstract class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
         }
@@ -144,6 +150,7 @@ public class RegisterAdapter extends RecyclerView.Adapter<RegisterAdapter.ViewHo
             tvDescription = itemView.findViewById(R.id.tvDescription);
             tvCategory = itemView.findViewById(R.id.tvCategory);
             tvAmount = itemView.findViewById(R.id.tvAmount);
+            itemView.setOnClickListener(this);
         }
 
         @Override
@@ -152,6 +159,27 @@ public class RegisterAdapter extends RecyclerView.Adapter<RegisterAdapter.ViewHo
             tvDescription.setText(register.getDescription());
             tvAmount.setText("$" + register.getAmount().toString());
             tvCategory.setText((String) register.getCategory().get("name"));
+            //Bind category icon to ivIcon
+            ParseFile iconFile = register.getCategory().getParseFile("iconFile");
+            if (iconFile != null) {
+                Log.d(TAG, "Setting photo");
+                GlideToVectorYou.init().with(context).load(Uri.parse(iconFile.getUrl()), ivIcon);
+            }
+        }
+
+        @Override
+        public void onClick(View v) {
+            //Get item position
+            int position = getAdapterPosition();
+            //Validate the position exists
+            if (position != RecyclerView.NO_POSITION) {
+                //Get register at position
+                Register register = registers.get(position);
+                //Create intent for activity
+                Intent i = new Intent(context, RegisterDetailsActivity.class);
+                i.putExtra(Register.class.getSimpleName(), Parcels.wrap(register));
+                context.startActivity(i);
+            }
         }
     }
 
@@ -167,6 +195,7 @@ public class RegisterAdapter extends RecyclerView.Adapter<RegisterAdapter.ViewHo
             tvDescription = itemView.findViewById(R.id.tvDescription);
             tvCategory = itemView.findViewById(R.id.tvCategory);
             tvAmount = itemView.findViewById(R.id.tvAmount);
+            itemView.setOnClickListener(this);
         }
 
         @Override
@@ -175,6 +204,27 @@ public class RegisterAdapter extends RecyclerView.Adapter<RegisterAdapter.ViewHo
             tvDescription.setText(register.getDescription());
             tvAmount.setText("$" + register.getAmount().toString());
             tvCategory.setText((String) register.getCategory().get("name"));
+            //Bind category icon to ivIcon
+            ParseFile iconFile = register.getCategory().getParseFile("iconFile");
+            if (iconFile != null) {
+                Log.d(TAG, "Setting photo");
+                GlideToVectorYou.init().with(context).load(Uri.parse(iconFile.getUrl()), ivIcon);
+            }
+        }
+
+        @Override
+        public void onClick(View v) {
+            //Get item position
+            int position = getAdapterPosition();
+            //Validate the position exists
+            if (position != RecyclerView.NO_POSITION) {
+                //Get register at position
+                Register register = registers.get(position);
+                //Create intent for activity
+                Intent i = new Intent(context, RegisterDetailsActivity.class);
+                i.putExtra(Register.class.getSimpleName(), Parcels.wrap(register));
+                context.startActivity(i);
+            }
         }
     }
 }

@@ -5,6 +5,9 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
+import org.parceler.Parcel;
+
+@Parcel(analyze = Register.class)
 @ParseClassName("Register")
 public class Register extends ParseObject {
     //Keys for class attributes
