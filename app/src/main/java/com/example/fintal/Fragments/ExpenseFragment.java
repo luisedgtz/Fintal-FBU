@@ -1,5 +1,7 @@
 package com.example.fintal.Fragments;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
 
@@ -120,7 +122,8 @@ public class ExpenseFragment extends Fragment {
     //Triggered when floating action button is clicked
     //displays a dialog for user to fill information about new task
     private void showNewDialog() {
-        new NewExpenseFragment().show(getChildFragmentManager(), NewIncomeFragment.TAG);
+        NewExpenseFragment fragment = new NewExpenseFragment();
+        fragment.show(getChildFragmentManager(), NewExpenseFragment.TAG);
     }
 
     //Function to get categories

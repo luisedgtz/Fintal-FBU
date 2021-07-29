@@ -3,6 +3,7 @@ package com.example.fintal;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -25,7 +26,9 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.whiteelephant.monthpicker.MonthPickerDialog;
 
+import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -43,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
         View v = inflater.inflate(R.layout.actionbar, null);
         //Get image view for user profile photo
         ImageView iv = v.findViewById(R.id.ivUserPicture);
+        //Get Layout View for date filter
+        ConstraintLayout clDate = v.findViewById(R.id.filterDate);
         //Get user photo from Parse for current user
         String objectId = ParseUser.getCurrentUser().getObjectId();
         ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
@@ -67,9 +72,46 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+        final Calendar today = Calendar.getInstance();
+        //Define MonthPickerDialog
+        MonthPickerDialog.Builder builder = new MonthPickerDialog.Builder(MainActivity.this,
+                new MonthPickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(int selectedMonth, int selectedYear) {
+
+                    }
+                }, today.get(Calendar.YEAR), today.get(Calendar.MONTH));
+        //Set on click listener to month/year selector
+        clDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                builder.setActivatedMonth(Calendar.JULY)
+                        .setMinYear(1990)
+                        .setActivatedYear(2017)
+                        .setMaxYear(2030)
+                        .setMinMonth(Calendar.FEBRUARY)
+                        .setTitle("Select trading month")
+                        .setMonthRange(Calendar.FEBRUARY, Calendar.NOVEMBER)
+                        .setOnMonthChangedListener(new MonthPickerDialog.OnMonthChangedListener() {
+                            @Override
+                            public void onMonthChanged(int selectedMonth) {
+
+                            }})
+                        .setOnYearChangedListener(new MonthPickerDialog.OnYearChangedListener() {
+                            @Override
+                            public void onYearChanged(int selectedYear) {
+
+                            } })
+                        .build()
+                        .show();
+            }
+        });
         //Set the custom view to the action bar
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        actionBar.setCustomView(v);
+        ActionBar.LayoutParams params = new ActionBar.LayoutParams(
+                ActionBar.LayoutParams.MATCH_PARENT,
+                ActionBar.LayoutParams.MATCH_PARENT);
+        actionBar.setCustomView(v, params);
 
         //FragmentManager
         final FragmentManager fragmentManager = getSupportFragmentManager();
