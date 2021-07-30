@@ -3,6 +3,7 @@ package com.example.fintal.Fragments;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.fintal.Adapters.RegisterAdapter;
+import com.example.fintal.MainActivity;
 import com.example.fintal.Models.Register;
 import com.example.fintal.Models.User;
 import com.example.fintal.R;
@@ -32,6 +34,8 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -79,6 +83,12 @@ public class HomeFragment extends Fragment {
 
         getTotalBalance();
         getLastRegisters();
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        Log.d(TAG, "View");
     }
 
     private void setupPieChart() {
@@ -137,7 +147,7 @@ public class HomeFragment extends Fragment {
         pieChart.animateY(1400, Easing.EaseInOutQuad);
     }
 
-    private void getAllExpenses() {
+    public void getAllExpenses() {
         //Start query with specified class
         ParseQuery<Register> query = ParseQuery.getQuery(Register.class);
         query.include(Register.KEY_CATEGORY);
@@ -159,7 +169,7 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void getLastRegisters() {
+    public void getLastRegisters() {
         //Start query with specified class
         ParseQuery<Register> query = ParseQuery.getQuery(Register.class);
         //limit to 10 items
@@ -168,6 +178,13 @@ public class HomeFragment extends Fragment {
         query.whereEqualTo("user", ParseUser.getCurrentUser());
         //order items from newest to oldest
         query.addDescendingOrder("createdAt");
+        //If date selection is not null, set query
+        if (MainActivity.selectedYear != null || MainActivity.selectedMonth != null) {
+            Date dateStart = new GregorianCalendar(MainActivity.selectedYear, MainActivity.selectedMonth, 1).getTime();
+            Date dateFinish = new GregorianCalendar(MainActivity.selectedYear, MainActivity.selectedMonth + 1, 1).getTime();
+            query.whereGreaterThanOrEqualTo("createdAt",dateStart);
+            query.whereLessThan("createdAt", dateFinish);
+        }
         //Start asynchronous call for query
         query.findInBackground(new FindCallback<Register>() {
             @Override
