@@ -81,8 +81,8 @@ public class HomeFragment extends Fragment {
         tvTotalIncome = getView().findViewById(R.id.tvIncomes);
         tvTotalExpense = getView().findViewById(R.id.tvExpenses);
 
-        getTotalBalance();
         getLastRegisters();
+        getBalance();
     }
 
     @Override
@@ -153,6 +153,12 @@ public class HomeFragment extends Fragment {
         query.include(Register.KEY_CATEGORY);
         query.whereEqualTo(Register.KEY_TYPE, false);
         query.whereEqualTo("user", ParseUser.getCurrentUser());
+        if (MainActivity.selectedYear != null || MainActivity.selectedMonth != null) {
+            Date dateStart = new GregorianCalendar(MainActivity.selectedYear, MainActivity.selectedMonth, 1).getTime();
+            Date dateFinish = new GregorianCalendar(MainActivity.selectedYear, MainActivity.selectedMonth + 1, 1).getTime();
+            query.whereGreaterThanOrEqualTo("createdAt",dateStart);
+            query.whereLessThan("createdAt", dateFinish);
+        }
         //Start asynchronous call for query
         query.findInBackground(new FindCallback<Register>() {
             @Override
@@ -178,7 +184,7 @@ public class HomeFragment extends Fragment {
         query.whereEqualTo("user", ParseUser.getCurrentUser());
         //order items from newest to oldest
         query.addDescendingOrder("createdAt");
-        //If date selection is not null, set query
+        //If date selection is not null, set query for month/year
         if (MainActivity.selectedYear != null || MainActivity.selectedMonth != null) {
             Date dateStart = new GregorianCalendar(MainActivity.selectedYear, MainActivity.selectedMonth, 1).getTime();
             Date dateFinish = new GregorianCalendar(MainActivity.selectedYear, MainActivity.selectedMonth + 1, 1).getTime();
@@ -199,6 +205,17 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    public void getBalance() {
+        //Check if month/year is selected
+        if (MainActivity.selectedYear != null || MainActivity.selectedMonth != null) {
+            Log.d(TAG, "MONTH");
+            getBalanceMonth();
+        } else {
+            Log.d(TAG, "TOTAL");
+            getTotalBalance();
+        }
+    }
+
     private void getTotalBalance() {
         //Get objectId for current logged user
         String objectId = ParseUser.getCurrentUser().getObjectId();
@@ -215,6 +232,48 @@ public class HomeFragment extends Fragment {
                 Number totalIncome = objects.get(0).getNumber("totalIncome");
                 Number totalExpenses = objects.get(0).getNumber("totalExpenses");
                 Number totalBalance = totalIncome.floatValue() - totalExpenses.floatValue();
+                tvTotalBalance.setText("$" + totalBalance.toString());
+                tvTotalIncome.setText("$" + totalIncome.toString());
+                tvTotalExpense.setText("$" + totalExpenses.toString());
+            }
+        });
+    }
+
+    private void getBalanceMonth() {
+        //Get objectId for current logged user
+        String objectId = ParseUser.getCurrentUser().getObjectId();
+        //Start query
+        ParseQuery<Register> query = ParseQuery.getQuery(Register.class);
+        query.whereEqualTo("user", ParseUser.getCurrentUser());
+        //order items from newest to oldest
+        query.addDescendingOrder("createdAt");
+        //If date selection is not null, set query for month/year
+        if (MainActivity.selectedYear != null || MainActivity.selectedMonth != null) {
+            Date dateStart = new GregorianCalendar(MainActivity.selectedYear, MainActivity.selectedMonth, 1).getTime();
+            Date dateFinish = new GregorianCalendar(MainActivity.selectedYear, MainActivity.selectedMonth + 1, 1).getTime();
+            query.whereGreaterThanOrEqualTo("createdAt",dateStart);
+            query.whereLessThan("createdAt", dateFinish);
+        }
+        query.findInBackground(new FindCallback<Register>() {
+            @Override
+            public void done(List<Register> objects, ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Error getting registers");
+                    return;
+                }
+                Log.d(TAG, Integer.toString(objects.size()));
+                float income = (float) 0.0;
+                float expense = (float) 0.0;
+                for (Register i : objects) {
+                    if (i.getType()) {
+                        income += i.getAmount().floatValue();
+                    } else {
+                        expense += i.getAmount().floatValue();
+                    }
+                }
+                Number totalBalance = income - expense;
+                Number totalIncome = income;
+                Number totalExpenses = expense;
                 tvTotalBalance.setText("$" + totalBalance.toString());
                 tvTotalIncome.setText("$" + totalIncome.toString());
                 tvTotalExpense.setText("$" + totalExpenses.toString());

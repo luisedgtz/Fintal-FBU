@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.SearchView;
 
 import com.example.fintal.Adapters.RegisterAdapter;
+import com.example.fintal.MainActivity;
 import com.example.fintal.Models.Category;
 import com.example.fintal.Models.Register;
 import com.example.fintal.R;
@@ -36,6 +37,8 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
@@ -185,7 +188,7 @@ public class ExpenseFragment extends Fragment {
         }
     }
 
-    private void getExpenses() {
+    public void getExpenses() {
         //Start query with specified class
         ParseQuery<Register> query = ParseQuery.getQuery(Register.class);
         //limit to 20 items
@@ -199,6 +202,13 @@ public class ExpenseFragment extends Fragment {
         query.whereEqualTo("type", false);
         //order items from newest to oldest
         query.addDescendingOrder("createdAt");
+        //If date selection is not null, set query for month/year
+        if (MainActivity.selectedYear != null || MainActivity.selectedMonth != null) {
+            Date dateStart = new GregorianCalendar(MainActivity.selectedYear, MainActivity.selectedMonth, 1).getTime();
+            Date dateFinish = new GregorianCalendar(MainActivity.selectedYear, MainActivity.selectedMonth + 1, 1).getTime();
+            query.whereGreaterThanOrEqualTo("createdAt",dateStart);
+            query.whereLessThan("createdAt", dateFinish);
+        }
         //Start asynchronous call for query
         query.findInBackground(new FindCallback<Register>() {
             @Override

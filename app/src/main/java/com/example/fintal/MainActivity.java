@@ -40,9 +40,12 @@ public class MainActivity extends AppCompatActivity {
     public static Integer selectedYear;
     private TextView tvDateSelected;
 
+    Fragment fragment;
     Fragment fragment1;
     Fragment fragment2;
     Fragment fragment3;
+
+    String fragmentTag = "HomeFragment";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,13 +99,13 @@ public class MainActivity extends AppCompatActivity {
         clDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                builder.setActivatedMonth(Calendar.JULY)
+                builder.setActivatedMonth(Calendar.AUGUST)
                         .setMinYear(1990)
-                        .setActivatedYear(2017)
+                        .setActivatedYear(2021)
                         .setMaxYear(2030)
-                        .setMinMonth(Calendar.FEBRUARY)
+                        .setMinMonth(Calendar.JANUARY)
                         .setTitle("Select trading month")
-                        .setMonthRange(Calendar.FEBRUARY, Calendar.NOVEMBER)
+                        .setMonthRange(Calendar.JANUARY, Calendar.DECEMBER)
                         .setOnMonthChangedListener(new MonthPickerDialog.OnMonthChangedListener() {
                             @Override
                             public void onMonthChanged(int selectedMonth) {
@@ -136,26 +139,30 @@ public class MainActivity extends AppCompatActivity {
 
         //Set default selected item
         bottomNavigationView.setSelectedItemId(R.id.action_home);
-        fragmentManager.beginTransaction().replace(R.id.flContainer, fragment1).commit();
+        fragment = fragment1;
+        fragmentManager.beginTransaction().replace(R.id.flContainer, fragment, fragmentTag).commit();
 
         //Navigation item selected listener
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Fragment fragment;
                 switch (item.getItemId()) {
                     case R.id.action_expense:
                         fragment = fragment3;
+                        fragmentTag = "ExpenseFragment";
                         break;
                     case R.id.action_income:
                         fragment = fragment2;
+                        fragmentTag = "IncomeFragment";
                         break;
                     case R.id.action_home:
                     default:
                         fragment = fragment1;
+                        fragmentTag = "HomeFragment";
                         break;
                 }
-                fragmentManager.beginTransaction().replace(R.id.flContainer, fragment, "FragmentTag").commit();
+
+                fragmentManager.beginTransaction().replace(R.id.flContainer, fragment, fragmentTag).commit();
                 return true;
             }
         });
@@ -165,11 +172,25 @@ public class MainActivity extends AppCompatActivity {
         this.selectedMonth = selectedMonth;
         this.selectedYear = selectedYear;
         //Get string for month
-        String monthString = new DateFormatSymbols().getMonths()[selectedMonth - 1];
+        String monthString = new DateFormatSymbols().getMonths()[selectedMonth];
         //Set text for Text View filter date
         tvDateSelected.setText(monthString + ", " + Integer.toString(selectedYear));
-        HomeFragment fragment = (HomeFragment) fragment1;
-        fragment.getLastRegisters();
+
+        if (fragment.getTag() == "HomeFragment") {
+            Log.d(TAG, "Home");
+            HomeFragment fragmentHome = (HomeFragment)fragment1;
+            fragmentHome.getLastRegisters();
+            fragmentHome.getBalance();
+            fragmentHome.getAllExpenses();
+        } else if (fragment.getTag() == "IncomeFragment") {
+            Log.d(TAG, "Income");
+            IncomeFragment fragmentIncome = (IncomeFragment) fragment2;
+            fragmentIncome.getIncomes();
+        } else if (fragment.getTag() == "ExpenseFragment") {
+            Log.d(TAG, "Expense");
+            ExpenseFragment fragmentExpense = (ExpenseFragment) fragment3;
+            fragmentExpense.getExpenses();
+        }
     }
 }
 
