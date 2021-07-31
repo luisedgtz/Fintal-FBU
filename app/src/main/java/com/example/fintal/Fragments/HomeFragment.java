@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.fintal.Adapters.RegisterAdapter;
+import com.example.fintal.EndlessRecyclerViewScrollListener;
 import com.example.fintal.MainActivity;
 import com.example.fintal.Models.Register;
 import com.example.fintal.Models.User;
@@ -279,6 +280,5 @@ public class HomeFragment extends Fragment {
                 tvTotalExpense.setText("$" + totalExpenses.toString());
             }
         });
-
     }
 }

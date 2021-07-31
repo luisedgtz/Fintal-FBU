@@ -1,6 +1,5 @@
 package com.example.fintal.Fragments;
 
-import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.os.Bundle;
 
@@ -20,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.SearchView;
 
 import com.example.fintal.Adapters.RegisterAdapter;
+import com.example.fintal.EndlessRecyclerViewScrollListener;
 import com.example.fintal.MainActivity;
 import com.example.fintal.Models.Category;
 import com.example.fintal.Models.Register;
@@ -27,7 +27,6 @@ import com.example.fintal.R;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.chip.ChipGroup;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.parse.DeleteCallback;
 import com.parse.FindCallback;
@@ -58,6 +57,8 @@ public class IncomeFragment extends Fragment {
     String selectedCategoryString;
     Category selectedCategory;
 
+    private EndlessRecyclerViewScrollListener scrollListener;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -74,6 +75,15 @@ public class IncomeFragment extends Fragment {
         rvIncomes.setAdapter(adapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         rvIncomes.setLayoutManager(linearLayoutManager);
+        //Add scroll listener for infinite scrolling
+        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                loadNextData();
+            }
+        };
+        rvIncomes.addOnScrollListener(scrollListener);
+
 
         //Define itemTouchHelper for swipe
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
@@ -219,6 +229,44 @@ public class IncomeFragment extends Fragment {
                 adapter.clear();
                 adapter.addAll(objects);
                 swipeContainer.setRefreshing(false);
+            }
+        });
+    }
+
+    //Method for getting more data after scrolling
+    private void loadNextData() {
+        //Start query with specified class
+        ParseQuery<Register> query = ParseQuery.getQuery(Register.class);
+        //limit to 20 items
+        query.setLimit(20);
+        query.whereLessThan("createdAt", incomesList.get(incomesList.size()-1).getCreatedAt());
+        query.include(Register.KEY_CATEGORY);
+        //Check if there is a selected category to filter
+        if (selectedCategoryString != "") {
+            query.whereEqualTo(Register.KEY_CATEGORY,selectedCategory);
+        }
+        query.whereEqualTo("user", ParseUser.getCurrentUser());
+        query.whereEqualTo("type", false);
+        // order posts by creation date (newest first)
+        query.addDescendingOrder("createdAt");
+        //If date selection is not null, set query for month/year
+        if (MainActivity.selectedYear != null || MainActivity.selectedMonth != null) {
+            Date dateStart = new GregorianCalendar(MainActivity.selectedYear, MainActivity.selectedMonth, 1).getTime();
+            Date dateFinish = new GregorianCalendar(MainActivity.selectedYear, MainActivity.selectedMonth + 1, 1).getTime();
+            query.whereGreaterThanOrEqualTo("createdAt",dateStart);
+            query.whereLessThan("createdAt", dateFinish);
+        }
+        // start an asynchronous call for posts
+        query.findInBackground(new FindCallback<Register>() {
+            @Override
+            public void done(List<Register> objects, ParseException e) {
+                //check for errors
+                if (e != null) {
+                    Log.e(TAG, "Issue with getting posts", e);
+                    return;
+                }
+                List<Register> newRegisters = objects;
+                adapter.addAll(objects);
             }
         });
     }
