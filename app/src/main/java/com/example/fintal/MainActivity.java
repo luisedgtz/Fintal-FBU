@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         View v = inflater.inflate(R.layout.actionbar, null);
         //Get image view for user profile photo
         ImageView iv = v.findViewById(R.id.ivUserPicture);
+        ImageButton btnAccount = v.findViewById(R.id.btnAccount);
         //Get Layout View for date filter
         ConstraintLayout clDate = v.findViewById(R.id.filterDate);
         //Get text view for display date filter
@@ -83,6 +85,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(), UserActivity.class);
+                startActivity(i);
+            }
+        });
+        //Set on click listener to Image Button to launch AccountsActivity
+        btnAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), AccountsActivity.class);
                 startActivity(i);
             }
         });

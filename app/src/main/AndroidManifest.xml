@@ -21,7 +21,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Fintal">
-        <activity android:name=".RegisterDetailsActivity"></activity>
+        <activity android:name=".AccountsActivity">
+            //Intent filter for Belvo WebView widget
+            <intent-filter> <!-- You need to add this entire XML object. -->
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Accepts URIs that begin with belvowidget:// -->
+                <data
+                    android:scheme="belvowidget"
+                    android:host="https://development.belvo.com" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".RegisterDetailsActivity" />
         <activity android:name=".UserActivity" />
 
         <provider

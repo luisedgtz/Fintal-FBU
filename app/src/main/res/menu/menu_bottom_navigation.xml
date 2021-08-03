@@ -18,5 +18,5 @@
         android:enabled="true"
         android:icon="@drawable/ic_round_arrow_downward_24"
         android:title="Income"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom"/>
 </menu>

@@ -246,7 +246,7 @@ public class IncomeFragment extends Fragment {
             query.whereEqualTo(Register.KEY_CATEGORY,selectedCategory);
         }
         query.whereEqualTo("user", ParseUser.getCurrentUser());
-        query.whereEqualTo("type", false);
+        query.whereEqualTo("type", true);
         // order posts by creation date (newest first)
         query.addDescendingOrder("createdAt");
         //If date selection is not null, set query for month/year

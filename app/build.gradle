@@ -72,4 +72,6 @@ dependencies {
     annotationProcessor 'org.parceler:parceler:1.1.12'
     //Year month selector
     compile 'com.whiteelephant:monthandyearpicker:1.3.0'
+    //CodePath HTTP Async Client
+    implementation 'com.codepath.libraries:asynchttpclient:2.1.1'
 }
