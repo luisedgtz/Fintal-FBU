@@ -2,6 +2,11 @@
 <resources>
     <color name="red_expenses">#C42816</color>
     <color name="green_incomes">#3BAD3C</color>
+    <color name="green_fintal">#00b67a</color>
+    <color name="blue_card">#072146</color>
+    <color name="gold_card">#E6CA3D</color>
+
+
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>

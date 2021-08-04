@@ -40,7 +40,6 @@ public class RegisterAdapter extends RecyclerView.Adapter<RegisterAdapter.ViewHo
         this.context = context;
         this.registers = registers;
         this.registersFull = new ArrayList<>();
-
     }
 
     //Clean all elements of the adapter
