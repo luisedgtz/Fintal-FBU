@@ -25,31 +25,31 @@ Fintal is a mobile app to manage personal finances. With Fintal you can register
 
 **Required Must-have Stories**
 
-[x] Users can login by email and password or create an account
-[x] Users can register expenses
-    [x] Delete or edit expenses
-[x] Users can register income
-    [x] Delete or edit income
-[x] Users can see a global balance of their money, including total expenses and total income
-[x] Users can categorize any register by some default categories (food, entertainment, home, transport, education, clothing, payments, others)
-[x] Users can see a graph of their expenses by category
-[x] Users can filter expenses by categories
-[x] Users can add a photo of a ticket to a register
+* [x] Users can login by email and password or create an account
+* [x] Users can register expenses
+    * [x] Delete or edit expenses
+* [x] Users can register income
+    * [x] Delete or edit income
+* [x] Users can see a global balance of their money, including total expenses and total income
+* [x] Users can categorize any register by some default categories (food, entertainment, home, transport, education, clothing, payments, others)
+* [x] Users can see a graph of their expenses by category
+* [x] Users can filter expenses by categories
+* [x] Users can add a photo of a ticket to a register
 
 **Optional Nice-to-have Stories**
-[x] Users can see their finances insights by month/year
-[] Users can add, edit or delete categories
-[] Users can create virtual money accounts associated with their real accounts 
+* [x] Users can see their finances insights by month/year
+* [] Users can add, edit or delete categories
+* [] Users can create virtual money accounts associated with their real accounts 
     * example: Wallet, account associated with my cash money
     * example: Main account, account associated with my BBVA Bank account
-[x] Users can link their real bank accounts (Only Latin American Bank Institutions)
-    [x] See total balance
-    [] See last transactions
-    [] Check total, remaining and spent credit on credit cards
-    [] See payment deadlines
-[] Push notifications
-    [] Daily reminder to update your expenses/income list
-    [] Reminder of payment deadlines
+* [x] Users can link their real bank accounts (Only Latin American Bank Institutions)
+    * [x] See total balance
+    * [] See last transactions
+    * [] Check total, remaining and spent credit on credit cards
+    * [] See payment deadlines
+* [] Push notifications
+    * [] Daily reminder to update your expenses/income list
+    * [] Reminder of payment deadlines
 
 
 ### 2. Screen Archetypes
