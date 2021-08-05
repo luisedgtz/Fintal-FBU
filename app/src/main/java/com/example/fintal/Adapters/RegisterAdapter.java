@@ -1,5 +1,6 @@
 package com.example.fintal.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -13,8 +14,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.util.Pair;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.fintal.Fragments.ExpenseFragment;
+import com.example.fintal.MainActivity;
 import com.example.fintal.Models.Register;
 import com.example.fintal.R;
 import com.example.fintal.RegisterDetailsActivity;
@@ -177,7 +184,12 @@ public class RegisterAdapter extends RecyclerView.Adapter<RegisterAdapter.ViewHo
                 //Create intent for activity
                 Intent i = new Intent(context, RegisterDetailsActivity.class);
                 i.putExtra(Register.class.getSimpleName(), Parcels.wrap(register));
-                context.startActivity(i);
+//                Pair<View, String> p1 = Pair.create((View) v.findViewById(R.id.ivIcon), "icon");
+//                Pair<View, String> p2 = Pair.create((View) v.findViewById(R.id.tvAmount), "amount");
+//                Pair<View, String> p3 = Pair.create((View) v.findViewById(R.id.tvDescription), "description");
+                ActivityOptionsCompat options = ActivityOptionsCompat.
+                        makeSceneTransitionAnimation((Activity) context, (View)v.findViewById(R.id.tvAmount) ,"amount");
+                context.startActivity(i, options.toBundle());
             }
         }
     }

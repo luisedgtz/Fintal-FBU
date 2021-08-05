@@ -6,6 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".RegisterDetailsActivity">
 
+    <ImageButton
+        android:id="@+id/btnBackDetails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:background="#00FFFFFF"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_round_arrow_back_ios_24" />
+
     <TextView
         android:id="@+id/tvAmountDetails"
         android:layout_width="wrap_content"
@@ -15,8 +26,9 @@
         android:text="TextView"
         android:textSize="20sp"
         android:textStyle="bold"
+        android:transitionName="amount"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnBackDetails"
         tools:text="$200" />
 
     <ImageView
@@ -25,11 +37,13 @@
         android:layout_height="60dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
+        android:transitionName="icon"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnBackDetails"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
+        android:transitionName="description"
         android:id="@+id/tvDescriptionDetails"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

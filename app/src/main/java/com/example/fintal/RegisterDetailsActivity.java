@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,6 +27,7 @@ public class RegisterDetailsActivity extends AppCompatActivity {
     private TextView tvAmount;
     private ImageView ivIcon;
     private ImageView ivTicket;
+    private ImageButton btnBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +40,14 @@ public class RegisterDetailsActivity extends AppCompatActivity {
         tvAmount = findViewById(R.id.tvAmountDetails);
         ivIcon = findViewById(R.id.ivIconDetails);
         ivTicket = findViewById(R.id.ivTicket);
+        btnBack = findViewById(R.id.btnBackDetails);
+
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                supportFinishAfterTransition();
+            }
+        });
 
         //Get register from Parceler wrap and
         register = Parcels.unwrap(getIntent().getParcelableExtra(Register.class.getSimpleName()));

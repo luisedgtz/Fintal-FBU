@@ -8,6 +8,7 @@
     android:paddingVertical="10dp">
 
     <ImageView
+        android:transitionName="icon"
         android:id="@+id/ivIcon"
         android:layout_width="42dp"
         android:layout_height="42dp"

@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <queries>
-
         <!-- Camera -->
         <intent>
             <action android:name="android.media.action.IMAGE_CAPTURE" />
@@ -33,8 +32,8 @@
                     android:host="https://development.belvo.com" />
             </intent-filter>
         </activity>
-        <activity android:name=".RegisterDetailsActivity" />
-        <activity android:name=".UserActivity" />
+        <activity android:name=".RegisterDetailsActivity" android:theme="@style/Theme.NoActionBar"/>
+        <activity android:name=".UserActivity" android:theme="@style/Theme.NoActionBar"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"
