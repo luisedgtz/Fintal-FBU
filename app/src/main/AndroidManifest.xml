@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <queries>
+
         <!-- Camera -->
         <intent>
             <action android:name="android.media.action.IMAGE_CAPTURE" />
@@ -20,20 +21,28 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Fintal">
-        <activity android:name=".AccountsActivity" android:theme="@style/Theme.NoActionBar">
+        <activity android:name=".AddBelvoActivity" android:theme="@style/Theme.NoActionBar"></activity>
+        <activity
+            android:name=".AccountsActivity"
+            android:theme="@style/Theme.NoActionBar">
             //Intent filter for Belvo WebView widget
             <intent-filter> <!-- You need to add this entire XML object. -->
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <!-- Accepts URIs that begin with belvowidget:// -->
                 <data
-                    android:scheme="belvowidget"
-                    android:host="https://development.belvo.com" />
+                    android:host="https://development.belvo.com"
+                    android:scheme="belvowidget" />
             </intent-filter>
         </activity>
-        <activity android:name=".RegisterDetailsActivity" android:theme="@style/Theme.NoActionBar"/>
-        <activity android:name=".UserActivity" android:theme="@style/Theme.NoActionBarNoTransition"/>
+        <activity
+            android:name=".RegisterDetailsActivity"
+            android:theme="@style/Theme.NoActionBar" />
+        <activity
+            android:name=".UserActivity"
+            android:theme="@style/Theme.NoActionBarNoTransition" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -64,7 +73,7 @@
             android:name="com.parse.CLIENT_KEY"
             android:value="@string/back4app_client_key" />
 
-        <activity android:name=".MainActivity"/>
+        <activity android:name=".MainActivity" />
     </application>
 
 </manifest>

@@ -1,15 +1,19 @@
 package com.example.fintal;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageButton;
 
 import com.codepath.asynchttpclient.AsyncHttpClient;
 import com.codepath.asynchttpclient.RequestParams;
@@ -32,12 +36,12 @@ import okhttp3.Headers;
 
 public class AccountsActivity extends AppCompatActivity {
     public static final String TAG = "AccountsActivity";
-    private String accessToken;
-    WebView belvoWebView;
 
     private RecyclerView rvBankAccounts;
     protected AccountAdapter adapter;
     private List<Account> accounts;
+    private ImageButton btnBack;
+    private ImageButton btnAddAccount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +57,27 @@ public class AccountsActivity extends AppCompatActivity {
         rvBankAccounts.setAdapter(adapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         rvBankAccounts.setLayoutManager(linearLayoutManager);
+
+        //Set on click listener to back button
+        btnBack = findViewById(R.id.btnBackAccounts);
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        //Set on click listener to launch add Belvo account
+        btnAddAccount = findViewById(R.id.btnAddAccount);
+        btnAddAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), AddBelvoActivity.class);
+                ActivityOptionsCompat options = ActivityOptionsCompat.
+                        makeSceneTransitionAnimation(AccountsActivity.this);
+                startActivity(i, options.toBundle());
+            }
+        });
     }
 
     //Method to get Belvo Links from Parse Database for current user
@@ -99,61 +124,5 @@ public class AccountsActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    private void getAccessToken() {
-        AsyncHttpClient client = new AsyncHttpClient();
-        RequestParams params = new RequestParams();
-        String apiUrl = "https://fintal.herokuapp.com/getAccessToken";
-        client.get(apiUrl, params, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Headers headers, JSON json) {
-                try {
-                    accessToken = json.jsonObject.getString("access");
-                    belvoWebView.loadUrl("https://widget.belvo.io/?access_token=" + accessToken);
-                    WebSettings webSettings = belvoWebView.getSettings();
-                    webSettings.setJavaScriptEnabled(true);
-                    webSettings.setAllowContentAccess(true);
-                    webSettings.setDomStorageEnabled(true);
-                    webSettings.setUseWideViewPort(true);
-                    webSettings.setAppCacheEnabled(true);
-
-                    BelvoWebClient webClient = new BelvoWebClient();
-                    belvoWebView.setWebViewClient(webClient);
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                Log.e(TAG, "Failure getting access token", throwable);
-            }
-        });
-    }
-
-    private class BelvoWebClient extends WebViewClient {
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            if (url.startsWith("https")) {
-                return true;
-            } else {
-                belvoWebView.stopLoading();
-                Uri uri = Uri.parse(url);
-                String host = uri.getHost();
-                if (host == "success") {
-                    String link = uri.getQueryParameter("link");
-                    String institution = uri.getQueryParameter("institution");
-                    Log.d(TAG, link);
-                } else if (host == "exit") {
-                    Log.d(TAG, "Exit");
-                } else {
-                    Log.d(TAG, "error");
-                }
-                belvoWebView.goBack();
-            }
-            return false;
-        }
     }
 }

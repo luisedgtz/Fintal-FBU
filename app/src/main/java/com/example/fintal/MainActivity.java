@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
                         .setActivatedYear(2021)
                         .setMaxYear(2030)
                         .setMinMonth(Calendar.JANUARY)
-                        .setTitle("Select trading month")
+                        .setTitle("Select month")
                         .setMonthRange(Calendar.JANUARY, Calendar.DECEMBER)
                         .setOnMonthChangedListener(new MonthPickerDialog.OnMonthChangedListener() {
                             @Override
@@ -135,6 +135,13 @@ public class MainActivity extends AppCompatActivity {
                             } })
                         .build()
                         .show();
+            }
+        });
+        clDate.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                changeDateToNull();
+                return false;
             }
         });
         //Set the custom view to the action bar
@@ -193,6 +200,27 @@ public class MainActivity extends AppCompatActivity {
         //Set text for Text View filter date
         tvDateSelected.setText(monthString + ", " + Integer.toString(selectedYear));
 
+        if (fragment.getTag() == "HomeFragment") {
+            Log.d(TAG, "Home");
+            HomeFragment fragmentHome = (HomeFragment)fragment1;
+            fragmentHome.getLastRegisters();
+            fragmentHome.getBalance();
+            fragmentHome.getAllExpenses();
+        } else if (fragment.getTag() == "IncomeFragment") {
+            Log.d(TAG, "Income");
+            IncomeFragment fragmentIncome = (IncomeFragment) fragment2;
+            fragmentIncome.getIncomes();
+        } else if (fragment.getTag() == "ExpenseFragment") {
+            Log.d(TAG, "Expense");
+            ExpenseFragment fragmentExpense = (ExpenseFragment) fragment3;
+            fragmentExpense.getExpenses();
+        }
+    }
+
+    private void changeDateToNull() {
+        this.selectedMonth = null;
+        this.selectedYear = null;
+        tvDateSelected.setText("Total");
         if (fragment.getTag() == "HomeFragment") {
             Log.d(TAG, "Home");
             HomeFragment fragmentHome = (HomeFragment)fragment1;
