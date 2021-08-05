@@ -1,10 +1,12 @@
 package com.example.fintal.Adapters;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +17,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityOptionsCompat;
-import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -184,11 +185,7 @@ public class RegisterAdapter extends RecyclerView.Adapter<RegisterAdapter.ViewHo
                 //Create intent for activity
                 Intent i = new Intent(context, RegisterDetailsActivity.class);
                 i.putExtra(Register.class.getSimpleName(), Parcels.wrap(register));
-//                Pair<View, String> p1 = Pair.create((View) v.findViewById(R.id.ivIcon), "icon");
-//                Pair<View, String> p2 = Pair.create((View) v.findViewById(R.id.tvAmount), "amount");
-//                Pair<View, String> p3 = Pair.create((View) v.findViewById(R.id.tvDescription), "description");
-                ActivityOptionsCompat options = ActivityOptionsCompat.
-                        makeSceneTransitionAnimation((Activity) context, (View)v.findViewById(R.id.tvAmount) ,"amount");
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context);
                 context.startActivity(i, options.toBundle());
             }
         }
@@ -234,7 +231,8 @@ public class RegisterAdapter extends RecyclerView.Adapter<RegisterAdapter.ViewHo
                 //Create intent for activity
                 Intent i = new Intent(context, RegisterDetailsActivity.class);
                 i.putExtra(Register.class.getSimpleName(), Parcels.wrap(register));
-                context.startActivity(i);
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context);
+                context.startActivity(i, options.toBundle());
             }
         }
     }

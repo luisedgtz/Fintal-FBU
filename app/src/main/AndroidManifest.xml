@@ -20,7 +20,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Fintal">
-        <activity android:name=".AccountsActivity">
+        <activity android:name=".AccountsActivity" android:theme="@style/Theme.NoActionBar">
             //Intent filter for Belvo WebView widget
             <intent-filter> <!-- You need to add this entire XML object. -->
                 <action android:name="android.intent.action.VIEW" />
@@ -33,7 +33,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".RegisterDetailsActivity" android:theme="@style/Theme.NoActionBar"/>
-        <activity android:name=".UserActivity" android:theme="@style/Theme.NoActionBar"/>
+        <activity android:name=".UserActivity" android:theme="@style/Theme.NoActionBarNoTransition"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -64,7 +64,7 @@
             android:name="com.parse.CLIENT_KEY"
             android:value="@string/back4app_client_key" />
 
-        <activity android:name=".MainActivity" />
+        <activity android:name=".MainActivity"/>
     </application>
 
 </manifest>

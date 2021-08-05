@@ -2,9 +2,11 @@ package com.example.fintal;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
