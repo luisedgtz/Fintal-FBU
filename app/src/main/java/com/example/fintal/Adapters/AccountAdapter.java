@@ -1,6 +1,8 @@
 package com.example.fintal.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,10 +14,14 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.fintal.AccountDetailsActivity;
 import com.example.fintal.Models.Account;
 import com.example.fintal.R;
+
+import org.parceler.Parcels;
 
 import java.util.List;
 
@@ -93,16 +99,17 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
         public void onClick(View v) {
             Log.d(TAG, "Clicked");
             //Get item position
-//            int position = getAdapterPosition();
-//            //Validate the position exists
-//            if (position != RecyclerView.NO_POSITION) {
-//                //Get post at position
-//                Post post = posts.get(position);
-//                //Create intent for activity
-//                Intent intent = new Intent(context, PostDetailsActivity.class);
-//                intent.putExtra(Post.class.getSimpleName(), Parcels.wrap(post));
-//                context.startActivity(intent);
-//            }
+            int position = getAdapterPosition();
+            //Validate the position exists
+            if (position != RecyclerView.NO_POSITION) {
+                //Get post at position
+                Account account = accounts.get(position);
+                //Create intent for activity
+                Intent intent = new Intent(context, AccountDetailsActivity.class);
+                intent.putExtra(Account.class.getSimpleName(), Parcels.wrap(account));
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity)context);
+                context.startActivity(intent, options.toBundle());
+            }
         }
     }
 

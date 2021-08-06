@@ -1,16 +1,14 @@
 package com.example.fintal.Models;
 
-import android.util.Log;
-
-import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Parcel(analyze = Account.class)
 public class Account {
     public static final String TAG = "AccountModel";
 

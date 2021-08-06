@@ -21,7 +21,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Fintal">
-        <activity android:name=".AddBelvoActivity" android:theme="@style/Theme.NoActionBar"></activity>
+        <activity android:name=".AccountDetailsActivity" android:theme="@style/Theme.NoActionBar"></activity>
+        <activity
+            android:name=".AddBelvoActivity"
+            android:theme="@style/Theme.NoActionBar" />
         <activity
             android:name=".AccountsActivity"
             android:theme="@style/Theme.NoActionBar">
