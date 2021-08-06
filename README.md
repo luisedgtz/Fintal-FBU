@@ -44,7 +44,7 @@ Fintal is a mobile app to manage personal finances. With Fintal you can register
     * [x] See last transactions
     * [x] Check total, remaining and spent credit on credit cards
     * [x] See payment deadlines
-* [ ] Users can swipe bank transactions to add them to their app registers
+* [x] Users can swipe bank transactions to add them to their app registers
 * [ ] Push notifications
     * [ ] Daily reminder to update your expenses/income list
     * [ ] Reminder of payment deadlines
