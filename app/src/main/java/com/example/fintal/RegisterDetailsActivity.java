@@ -51,7 +51,7 @@ public class RegisterDetailsActivity extends AppCompatActivity {
             }
         });
 
-        //Get register from Parceler wrap and
+        //Get register from Parceler wrap
         register = Parcels.unwrap(getIntent().getParcelableExtra(Register.class.getSimpleName()));
 
         //Bind register data to Views
