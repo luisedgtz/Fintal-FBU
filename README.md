@@ -38,18 +38,18 @@ Fintal is a mobile app to manage personal finances. With Fintal you can register
 
 **Optional Nice-to-have Stories**
 * [x] Users can see their finances insights by month/year
-* [] Users can add, edit or delete categories
-* [] Users can create virtual money accounts associated with their real accounts 
+* [ ] Users can add, edit or delete categories
+* [ ] Users can create virtual money accounts associated with their real accounts 
     * example: Wallet, account associated with my cash money
     * example: Main account, account associated with my BBVA Bank account
 * [x] Users can link their real bank accounts (Only Latin American Bank Institutions)
     * [x] See total balance
-    * [] See last transactions
-    * [] Check total, remaining and spent credit on credit cards
-    * [] See payment deadlines
-* [] Push notifications
-    * [] Daily reminder to update your expenses/income list
-    * [] Reminder of payment deadlines
+    * [x] See last transactions
+    * [x] Check total, remaining and spent credit on credit cards
+    * [x] See payment deadlines
+* [ ] Push notifications
+    * [ ] Daily reminder to update your expenses/income list
+    * [ ] Reminder of payment deadlines
 
 
 ### 2. Screen Archetypes
