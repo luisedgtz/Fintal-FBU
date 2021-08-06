@@ -45,6 +45,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class NewIncomeFragment extends DialogFragment {
@@ -145,6 +146,7 @@ public class NewIncomeFragment extends DialogFragment {
         Register register = new Register();
         register.setType(true);
         register.setUser(currentUser);
+        register.setCreatedAt(new Date());
         if (photoFile != null) {
             register.setPhoto(new ParseFile(photoFile));
         }

@@ -7,6 +7,8 @@ import com.parse.ParseUser;
 
 import org.parceler.Parcel;
 
+import java.util.Date;
+
 @Parcel(analyze = Register.class)
 @ParseClassName("Register")
 public class Register extends ParseObject {
@@ -17,6 +19,7 @@ public class Register extends ParseObject {
     public static final String KEY_PHOTO = "filePhoto";
     public static final String KEY_CATEGORY = "category";
     public static final String KEY_USER = "user";
+    public static final String KEY_VALUE_DATE = "valueDate";
 
     public Register() {}
 
@@ -39,6 +42,9 @@ public class Register extends ParseObject {
     public ParseUser getUser() {
         return getParseUser(KEY_USER);
     }
+    public Date getValueDate() {
+        return getDate(KEY_VALUE_DATE);
+    }
 
     //SET METHODS
     public void setType(Boolean type) {
@@ -58,5 +64,8 @@ public class Register extends ParseObject {
     }
     public void setUser(ParseUser user) {
         put(KEY_USER, user);
+    }
+    public void setCreatedAt(Date date) {
+        put(KEY_VALUE_DATE, date);
     }
 }

@@ -157,8 +157,8 @@ public class HomeFragment extends Fragment {
         if (MainActivity.selectedYear != null || MainActivity.selectedMonth != null) {
             Date dateStart = new GregorianCalendar(MainActivity.selectedYear, MainActivity.selectedMonth, 1).getTime();
             Date dateFinish = new GregorianCalendar(MainActivity.selectedYear, MainActivity.selectedMonth + 1, 1).getTime();
-            query.whereGreaterThanOrEqualTo("createdAt",dateStart);
-            query.whereLessThan("createdAt", dateFinish);
+            query.whereGreaterThanOrEqualTo("valueDate",dateStart);
+            query.whereLessThan("valueDate", dateFinish);
         }
         //Start asynchronous call for query
         query.findInBackground(new FindCallback<Register>() {
@@ -184,13 +184,13 @@ public class HomeFragment extends Fragment {
         query.include(Register.KEY_CATEGORY);
         query.whereEqualTo("user", ParseUser.getCurrentUser());
         //order items from newest to oldest
-        query.addDescendingOrder("createdAt");
+        query.addDescendingOrder("valueDate");
         //If date selection is not null, set query for month/year
         if (MainActivity.selectedYear != null || MainActivity.selectedMonth != null) {
             Date dateStart = new GregorianCalendar(MainActivity.selectedYear, MainActivity.selectedMonth, 1).getTime();
             Date dateFinish = new GregorianCalendar(MainActivity.selectedYear, MainActivity.selectedMonth + 1, 1).getTime();
-            query.whereGreaterThanOrEqualTo("createdAt",dateStart);
-            query.whereLessThan("createdAt", dateFinish);
+            query.whereGreaterThanOrEqualTo("valueDate",dateStart);
+            query.whereLessThan("valueDate", dateFinish);
         }
         //Start asynchronous call for query
         query.findInBackground(new FindCallback<Register>() {
@@ -247,13 +247,13 @@ public class HomeFragment extends Fragment {
         ParseQuery<Register> query = ParseQuery.getQuery(Register.class);
         query.whereEqualTo("user", ParseUser.getCurrentUser());
         //order items from newest to oldest
-        query.addDescendingOrder("createdAt");
+        query.addDescendingOrder("valueDate");
         //If date selection is not null, set query for month/year
         if (MainActivity.selectedYear != null || MainActivity.selectedMonth != null) {
             Date dateStart = new GregorianCalendar(MainActivity.selectedYear, MainActivity.selectedMonth, 1).getTime();
             Date dateFinish = new GregorianCalendar(MainActivity.selectedYear, MainActivity.selectedMonth + 1, 1).getTime();
-            query.whereGreaterThanOrEqualTo("createdAt",dateStart);
-            query.whereLessThan("createdAt", dateFinish);
+            query.whereGreaterThanOrEqualTo("valueDate",dateStart);
+            query.whereLessThan("valueDate", dateFinish);
         }
         query.findInBackground(new FindCallback<Register>() {
             @Override

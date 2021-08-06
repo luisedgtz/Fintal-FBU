@@ -210,13 +210,13 @@ public class ExpenseFragment extends Fragment {
         query.whereEqualTo("user", ParseUser.getCurrentUser());
         query.whereEqualTo("type", false);
         //order items from newest to oldest
-        query.addDescendingOrder("createdAt");
+        query.addDescendingOrder("valueDate");
         //If date selection is not null, set query for month/year
         if (MainActivity.selectedYear != null || MainActivity.selectedMonth != null) {
             Date dateStart = new GregorianCalendar(MainActivity.selectedYear, MainActivity.selectedMonth, 1).getTime();
             Date dateFinish = new GregorianCalendar(MainActivity.selectedYear, MainActivity.selectedMonth + 1, 1).getTime();
-            query.whereGreaterThanOrEqualTo("createdAt",dateStart);
-            query.whereLessThan("createdAt", dateFinish);
+            query.whereGreaterThanOrEqualTo("valueDate",dateStart);
+            query.whereLessThan("valueDate", dateFinish);
         }
         //Start asynchronous call for query
         query.findInBackground(new FindCallback<Register>() {
@@ -239,7 +239,7 @@ public class ExpenseFragment extends Fragment {
         ParseQuery<Register> query = ParseQuery.getQuery(Register.class);
         //limit to 20 items
         query.setLimit(20);
-        query.whereLessThan("createdAt", expensesList.get(expensesList.size()-1).getCreatedAt());
+        query.whereLessThan("valueDate", expensesList.get(expensesList.size()-1).getValueDate());
         query.include(Register.KEY_CATEGORY);
         //Check if there is a selected category to filter
         if (selectedCategoryString != "") {
@@ -248,13 +248,13 @@ public class ExpenseFragment extends Fragment {
         query.whereEqualTo("user", ParseUser.getCurrentUser());
         query.whereEqualTo("type", false);
         // order posts by creation date (newest first)
-        query.addDescendingOrder("createdAt");
+        query.addDescendingOrder("valueDate");
         //If date selection is not null, set query for month/year
         if (MainActivity.selectedYear != null || MainActivity.selectedMonth != null) {
             Date dateStart = new GregorianCalendar(MainActivity.selectedYear, MainActivity.selectedMonth, 1).getTime();
             Date dateFinish = new GregorianCalendar(MainActivity.selectedYear, MainActivity.selectedMonth + 1, 1).getTime();
-            query.whereGreaterThanOrEqualTo("createdAt",dateStart);
-            query.whereLessThan("createdAt", dateFinish);
+            query.whereGreaterThanOrEqualTo("valueDate",dateStart);
+            query.whereLessThan("valueDate", dateFinish);
         }
         // start an asynchronous call for posts
         query.findInBackground(new FindCallback<Register>() {

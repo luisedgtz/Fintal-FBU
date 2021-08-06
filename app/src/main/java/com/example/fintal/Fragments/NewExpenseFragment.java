@@ -47,6 +47,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class NewExpenseFragment extends DialogFragment {
@@ -147,6 +148,7 @@ public class NewExpenseFragment extends DialogFragment {
         Register register = new Register();
         register.setType(false);
         register.setUser(currentUser);
+        register.setCreatedAt(new Date());
         if (photoFile != null) {
             register.setPhoto(new ParseFile(photoFile));
         }
