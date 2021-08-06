@@ -3,25 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cardContainer"
-    android:layout_width="250dp"
-    android:layout_height="150dp"
+    android:layout_width="match_parent"
+    android:layout_height="160dp"
     android:layout_marginStart="10dp"
-    android:layout_marginTop="20dp"
+    android:layout_marginTop="10dp"
     android:layout_marginEnd="10dp"
-    android:layout_marginBottom="20dp"
+    android:layout_marginBottom="10dp"
     android:background="@drawable/layout_borders_all"
-    android:backgroundTint="#FFFFFF"
-    android:elevation="10dp">
+    android:backgroundTint="#FFFFFF">
 
     <ImageView
         android:id="@+id/ivBankLogo"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:srcCompat="@drawable/bancomer"
+        tools:srcCompat="@drawable/bancomer" />
 
     <TextView
         android:id="@+id/balance"
@@ -30,7 +30,7 @@
         android:layout_below="@+id/ivBankLogo"
         android:layout_alignParentStart="true"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:text="Balance"
         android:textColor="@color/black" />
 
@@ -54,7 +54,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="125dp"
+        android:layout_marginStart="250dp"
         android:layout_marginTop="0dp"
         android:layout_marginBottom="0dp"
         android:background="@drawable/decorator"
@@ -73,5 +73,15 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/tvAccountType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvCardBalance"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:text="Credit Card" />
 
 </RelativeLayout>

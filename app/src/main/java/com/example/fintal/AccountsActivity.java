@@ -55,7 +55,7 @@ public class AccountsActivity extends AppCompatActivity {
         accounts = new ArrayList<>();
         adapter = new AccountAdapter(this, accounts);
         rvBankAccounts.setAdapter(adapter);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rvBankAccounts.setLayoutManager(linearLayoutManager);
 
         //Set on click listener to back button

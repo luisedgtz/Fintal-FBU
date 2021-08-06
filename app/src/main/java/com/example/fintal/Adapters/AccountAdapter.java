@@ -73,6 +73,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
         TextView tvCardBalance;
         ConstraintLayout decorator;
         TextView tvAccountNumber;
+        TextView tvAccountType;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -81,6 +82,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
             tvCardBalance = itemView.findViewById(R.id.tvCardBalance);
             decorator = itemView.findViewById(R.id.decorator);
             tvAccountNumber = itemView.findViewById(R.id.tvAccountNumber);
+            tvAccountType = itemView.findViewById(R.id.tvAccountType);
             itemView.setOnClickListener(this);
         }
 
@@ -92,6 +94,9 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
             tvAccountNumber.setText(account.accountNumber);
             if (account.category.equals("CREDIT_CARD")) {
                 decorator.setBackgroundTintList(context.getResources().getColorStateList(R.color.color_credit));
+                tvAccountType.setText("Credit card");
+            } else {
+                tvAccountType.setText("Checking account");
             }
         }
 
