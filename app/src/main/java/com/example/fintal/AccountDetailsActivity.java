@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.graphics.Canvas;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -27,6 +28,7 @@ import com.example.fintal.Adapters.TransactionAdapter;
 import com.example.fintal.Models.Account;
 import com.example.fintal.Models.Register;
 import com.example.fintal.Models.Transaction;
+import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou;
 import com.parse.DeleteCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -103,6 +105,7 @@ public class AccountDetailsActivity extends AppCompatActivity {
             Double progressPercent = account.balance * 100 / account.creditLimit;
             pbCredit.setProgress(progressPercent.intValue(), true);
         }
+        GlideToVectorYou.init().with(getApplicationContext()).load(Uri.parse(account.urlBank), ivInstitutionLogo);
 
         btnBack = findViewById(R.id.btnBackAccount);
         btnBack.setOnClickListener(new View.OnClickListener() {

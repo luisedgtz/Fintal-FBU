@@ -1,9 +1,11 @@
 package com.example.fintal.Fragments;
 
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
@@ -23,6 +25,7 @@ import com.example.fintal.EndlessRecyclerViewScrollListener;
 import com.example.fintal.MainActivity;
 import com.example.fintal.Models.Category;
 import com.example.fintal.Models.Register;
+import com.example.fintal.OnIntentReceived;
 import com.example.fintal.R;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipDrawable;
@@ -47,6 +50,8 @@ public class ExpenseFragment extends Fragment {
 
     private RecyclerView rvExpenses;
     protected RegisterAdapter adapter;
+    //Listener for intent received
+    private OnIntentReceived mIntentListener;
     protected List<Register> expensesList;
     protected FloatingActionButton btnAddExpense;
 

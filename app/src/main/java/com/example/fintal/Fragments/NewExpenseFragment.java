@@ -59,7 +59,6 @@ public class NewExpenseFragment extends DialogFragment {
     List<Category> categories;
     ArrayList<String> categoriesString;
     AutoCompleteTextView categoryPicker;
-    BottomSheetDialog bottomSheetDialog;
     Button btnTicket;
     Button btnSave;
     Button btnCancel;
@@ -102,14 +101,12 @@ public class NewExpenseFragment extends DialogFragment {
         categoryPicker = getView().findViewById(R.id.categoryExpense);
         categoryPicker.setAdapter(adapter);
 
-        bottomSheetDialog = new BottomSheetDialog(getContext());
-
         //Set on click listener to ADD TICKET BUTTON
         btnTicket = getView().findViewById(R.id.btnTicketExpense);
         btnTicket.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showBottomSheetDialog();
+                launchCamera();
             }
         });
 
@@ -205,27 +202,6 @@ public class NewExpenseFragment extends DialogFragment {
         });
     }
 
-    //Function to show bottom sheet dialog
-    private void showBottomSheetDialog() {
-        bottomSheetDialog.setContentView(R.layout.fragment_options_bottom_sheet);
-
-        ConstraintLayout btnTakePhoto = bottomSheetDialog.findViewById(R.id.btnTakePhoto);
-        ConstraintLayout btnGallery = bottomSheetDialog.findViewById(R.id.btnGallery);
-        btnTakePhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                launchCamera();
-            }
-        });
-        btnGallery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "Clicked");
-            }
-        });
-        bottomSheetDialog.show();
-    }
-
     //CAMERA LAUNCHER FUNCTIONS
     public void launchCamera() {
         // create Intent to take a picture and return control to the calling application
@@ -263,7 +239,6 @@ public class NewExpenseFragment extends DialogFragment {
                 scaledImage.compress(Bitmap.CompressFormat.JPEG, 40, bytes);
                 ImageView ivPreview = getView().findViewById(R.id.ivTicketExpense);
                 ivPreview.setImageBitmap(scaledImage);
-                bottomSheetDialog.dismiss();
             } else { // Result was a failure
                 Toast.makeText(getContext(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }

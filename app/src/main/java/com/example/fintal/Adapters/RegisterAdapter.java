@@ -24,11 +24,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.fintal.Fragments.ExpenseFragment;
 import com.example.fintal.MainActivity;
 import com.example.fintal.Models.Register;
+import com.example.fintal.OnIntentReceived;
 import com.example.fintal.R;
 import com.example.fintal.RegisterDetailsActivity;
 import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou;
 import com.parse.ParseFile;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -138,7 +140,7 @@ public class RegisterAdapter extends RecyclerView.Adapter<RegisterAdapter.ViewHo
         }
     };
 
-    public abstract class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public abstract class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener  {
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
         }
@@ -150,6 +152,7 @@ public class RegisterAdapter extends RecyclerView.Adapter<RegisterAdapter.ViewHo
         private TextView tvDescription;
         private TextView tvCategory;
         private TextView tvAmount;
+        private TextView tvDate;
 
         public ExpenseViewHolder(View itemView) {
             super(itemView);
@@ -157,6 +160,7 @@ public class RegisterAdapter extends RecyclerView.Adapter<RegisterAdapter.ViewHo
             tvDescription = itemView.findViewById(R.id.tvDescription);
             tvCategory = itemView.findViewById(R.id.tvCategory);
             tvAmount = itemView.findViewById(R.id.tvAmount);
+            tvDate = itemView.findViewById(R.id.tvDateExpense);
             itemView.setOnClickListener(this);
         }
 
@@ -166,6 +170,9 @@ public class RegisterAdapter extends RecyclerView.Adapter<RegisterAdapter.ViewHo
             tvDescription.setText(register.getDescription());
             tvAmount.setText("$" + register.getAmount().toString());
             tvCategory.setText((String) register.getCategory().get("name"));
+            SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+            String dateString = format.format(register.getValueDate());
+            tvDate.setText(dateString);
             //Bind category icon to ivIcon
             ParseFile iconFile = register.getCategory().getParseFile("iconFile");
             if (iconFile != null) {
@@ -186,7 +193,8 @@ public class RegisterAdapter extends RecyclerView.Adapter<RegisterAdapter.ViewHo
                 Intent i = new Intent(context, RegisterDetailsActivity.class);
                 i.putExtra(Register.class.getSimpleName(), Parcels.wrap(register));
                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context);
-                context.startActivity(i, options.toBundle());
+                Activity origin = (Activity) context;
+                origin.startActivityForResult(i, 125, options.toBundle());
             }
         }
     }
@@ -196,6 +204,7 @@ public class RegisterAdapter extends RecyclerView.Adapter<RegisterAdapter.ViewHo
         private TextView tvDescription;
         private TextView tvCategory;
         private TextView tvAmount;
+        private TextView tvDate;
 
         public IncomeViewHolder(View itemView) {
             super(itemView);
@@ -203,6 +212,7 @@ public class RegisterAdapter extends RecyclerView.Adapter<RegisterAdapter.ViewHo
             tvDescription = itemView.findViewById(R.id.tvDescription);
             tvCategory = itemView.findViewById(R.id.tvCategory);
             tvAmount = itemView.findViewById(R.id.tvAmount);
+            tvDate = itemView.findViewById(R.id.tvDateIncome);
             itemView.setOnClickListener(this);
         }
 
@@ -212,6 +222,9 @@ public class RegisterAdapter extends RecyclerView.Adapter<RegisterAdapter.ViewHo
             tvDescription.setText(register.getDescription());
             tvAmount.setText("$" + register.getAmount().toString());
             tvCategory.setText((String) register.getCategory().get("name"));
+            SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+            String dateString = format.format(register.getValueDate());
+            tvDate.setText(dateString);
             //Bind category icon to ivIcon
             ParseFile iconFile = register.getCategory().getParseFile("iconFile");
             if (iconFile != null) {
@@ -232,8 +245,14 @@ public class RegisterAdapter extends RecyclerView.Adapter<RegisterAdapter.ViewHo
                 Intent i = new Intent(context, RegisterDetailsActivity.class);
                 i.putExtra(Register.class.getSimpleName(), Parcels.wrap(register));
                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context);
-                context.startActivity(i, options.toBundle());
+                Activity origin = (Activity) context;
+                origin.startActivityForResult(i, 125, options.toBundle());
             }
         }
+    }
+
+    public  void onActivityResult(int requestCode, int resultCode, Intent data) {
+        notifyDataSetChanged();
+        Log.d("MyAdapter", "onActivityResult");
     }
 }

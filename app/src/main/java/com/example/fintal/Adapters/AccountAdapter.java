@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.fintal.AccountDetailsActivity;
 import com.example.fintal.Models.Account;
 import com.example.fintal.R;
+import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou;
 
 import org.parceler.Parcels;
 
@@ -95,9 +97,14 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
             if (account.category.equals("CREDIT_CARD")) {
                 decorator.setBackgroundTintList(context.getResources().getColorStateList(R.color.color_credit));
                 tvAccountType.setText("Credit card");
-            } else {
+            } else if (account.category.equals("CHECKING_ACCOUNT")){
                 tvAccountType.setText("Checking account");
+            } else {
+                decorator.setBackgroundTintList(context.getResources().getColorStateList(R.color.color_loan));
+                tvAccountType.setText("Loan account");
             }
+            //Set bank image
+            GlideToVectorYou.init().with(context).load(Uri.parse(account.urlBank), ivBankLogo);
         }
 
         @Override
