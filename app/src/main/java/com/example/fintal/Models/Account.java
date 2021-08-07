@@ -13,6 +13,7 @@ public class Account {
     public static final String TAG = "AccountModel";
 
     public String id;
+    public String linkId;
     public String institution;
     public Double currentBalance;
     public Double availableBalance;
@@ -29,6 +30,7 @@ public class Account {
     public static Account fromJson(JSONObject jsonObject) throws JSONException {
         Account account = new Account();
         account.id = jsonObject.getString("id");
+        account.linkId = jsonObject.getString("link");
         account.institution = jsonObject.getJSONObject("institution").getString("name");
         account.currentBalance = jsonObject.getJSONObject("balance").getDouble("current");
         account.availableBalance = jsonObject.getJSONObject("balance").getDouble("available");

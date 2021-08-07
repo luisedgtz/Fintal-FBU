@@ -8,6 +8,7 @@ import com.parse.ParseUser;
 public class Link extends ParseObject {
     public static final String KEY_ID_LINK = "linkId";
     public static final String KEY_USER = "user";
+    public static final String KEY_INSTITUTION = "institution";
 
     public Link() {}
 
@@ -18,6 +19,9 @@ public class Link extends ParseObject {
     public ParseUser getUser() {
         return getParseUser(KEY_USER);
     }
+    public String getInstitution() {
+        return getString(KEY_INSTITUTION);
+    }
 
     //SET methods
     public void setLinkId(String id) {
@@ -25,5 +29,8 @@ public class Link extends ParseObject {
     }
     public void setUser(ParseUser user) {
         put(KEY_USER, user);
+    }
+    public void setInstitution(String institution) {
+        put(KEY_INSTITUTION, institution);
     }
 }

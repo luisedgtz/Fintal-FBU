@@ -8,10 +8,16 @@ import android.util.Log;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import com.codepath.asynchttpclient.AsyncHttpClient;
 import com.codepath.asynchttpclient.RequestParams;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
+import com.example.fintal.Models.Link;
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import org.json.JSONException;
 
@@ -73,14 +79,33 @@ public class AddBelvoActivity extends AppCompatActivity {
                 belvoWebView.stopLoading();
                 Uri uri = Uri.parse(url);
                 String host = uri.getHost();
-                if (host == "success") {
+                Log.d(TAG, "HostMessage " + host);
+                if (host.equals("success")) {
                     String link = uri.getQueryParameter("link");
                     String institution = uri.getQueryParameter("institution");
                     Log.d(TAG, link);
-                } else if (host == "exit") {
+                    Link bankLink = new Link();
+                    bankLink.setInstitution(institution);
+                    bankLink.setLinkId(link);
+                    bankLink.setUser(ParseUser.getCurrentUser());
+                    bankLink.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (e != null) {
+                                Toast.makeText(getApplicationContext(), "Error while saving", Toast.LENGTH_SHORT).show();
+                                Log.e(TAG, "error", e);
+                                return;
+                            }
+                            Toast.makeText(getApplicationContext(), "Saved successfully", Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+                    });
+                } else if (host.equals("exit")) {
                     Log.d(TAG, "Exit");
+                    finish();
                 } else {
                     Log.d(TAG, "error");
+                    finish();
                 }
                 belvoWebView.goBack();
             }

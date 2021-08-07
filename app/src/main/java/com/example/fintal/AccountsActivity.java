@@ -16,6 +16,7 @@ import android.webkit.WebViewClient;
 import android.widget.ImageButton;
 
 import com.codepath.asynchttpclient.AsyncHttpClient;
+import com.codepath.asynchttpclient.RequestHeaders;
 import com.codepath.asynchttpclient.RequestParams;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.fintal.Adapters.AccountAdapter;
@@ -28,6 +29,7 @@ import com.parse.ParseUser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,20 +95,28 @@ public class AccountsActivity extends AppCompatActivity {
                 }
                 for (Link link : objects) {
                     //Call get accounts with each link
-                    getBelvoAccounts(link.getLinkId());
+                    try {
+                        getBelvoAccounts(link.getLinkId());
+                    } catch (JSONException jsonException) {
+                        jsonException.printStackTrace();
+                    }
                 }
             }
         });
     }
 
     //Method for retrieving Bank Accounts from Belvo API given a linkId
-    private void getBelvoAccounts(String linkId) {
+    private void getBelvoAccounts(String linkId) throws JSONException {
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
-        params.put("link", linkId);
-        //Call fintal heroku server endpoint
-        String apiUrl = "https://fintal.herokuapp.com/getAccounts";
-        client.get(apiUrl, params, new JsonHttpResponseHandler() {
+        params.put("link" , linkId);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("link", linkId);
+        RequestHeaders headers = new RequestHeaders();
+        headers.put("Authorization" , getString(R.string.BasicAuth));
+        String apiUrl = "https://sandbox.belvo.com/api/accounts/";
+        //Call Belvo endpoint
+        client.post(apiUrl, headers, params, jsonObject.toString(), new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
                 adapter.clear();
@@ -118,10 +128,9 @@ public class AccountsActivity extends AppCompatActivity {
                     Log.e(TAG, "JSON exception" , e);
                 }
             }
-
             @Override
             public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-
+                Log.e(TAG, response, throwable);
             }
         });
     }

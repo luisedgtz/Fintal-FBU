@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codepath.asynchttpclient.AsyncHttpClient;
+import com.codepath.asynchttpclient.RequestHeaders;
 import com.codepath.asynchttpclient.RequestParams;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 import com.example.fintal.Adapters.AccountAdapter;
@@ -36,11 +37,13 @@ import com.parse.SaveCallback;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -110,7 +113,11 @@ public class AccountDetailsActivity extends AppCompatActivity {
         });
 
         //Call get transactions for current account
-        getTransactions(account.id);
+        try {
+            getTransactions(account.id, account.linkId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         //Define itemTouchHelper for swipe
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
@@ -118,11 +125,26 @@ public class AccountDetailsActivity extends AppCompatActivity {
         itemTouchHelper.attachToRecyclerView(rvTransactions);
     }
 
-    private void getTransactions(String id) {
+    private void getTransactions(String id, String linkId) throws JSONException {
+        //Get Transactions from the last year
+        Date date1 = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date1);
+        calendar.add(Calendar.YEAR, -1);
+        Date date2 = calendar.getTime();
+        //Get string format
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String dateFrom = format.format(date2);
+        String dateTo = format.format(date1);
+
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
         params.put("id", id);
-        //Call fintal heroku server
+        params.put("link" , linkId);
+        params.put("dateFrom" , dateFrom);
+        params.put("dateTo", dateTo);
+
+        //Call fintal Heroku server
         String apiUrl = "https://fintal.herokuapp.com/getTransactions";
         client.get(apiUrl, params, new JsonHttpResponseHandler() {
             @Override
@@ -139,7 +161,7 @@ public class AccountDetailsActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                Log.e(TAG, "Failure getting transactions");
+                Log.e(TAG, response, throwable);
             }
         });
     }
